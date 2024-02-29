@@ -21,12 +21,10 @@ struct UserCellView: View {
     var isShowingId: Bool
     var isShowingNat: Bool
     
-    let dateFromater = ISO8601DateFormatter()
-    
     var body: some View {
         VStack {
             HStack {
-                AsyncImage(url: URL(string: user.picture.thumbnail)) { phase in
+                AsyncImage(url: URL(string: user.picture.thumbnail ?? "image")) { phase in
                     switch phase {
                     case .empty:
                         ProgressView()
@@ -42,20 +40,20 @@ struct UserCellView: View {
                     }
                 }
                 VStack {
-                    Text("\(user.name.first) \(user.name.last)")
+                    Text("\(user.name.first ?? "") \(user.name.last ?? "")")
                         .font(.largeTitle)
                     
                     HStack {
                         if isShowingGender {
-                            Text(user.gender)
+                            Text(user.gender ?? "Don't know")
                         }
                         
                         if isShowingDob {
-                            Text("age: \(user.dob.age)")
+                            Text("age: \(user.dob.age ?? 0)")
                         }
                         
                         if isShowingNat {
-                            Text(user.nat)
+                            Text(user.nat ?? "Unknown")
                         }
                     }
                 }
@@ -63,46 +61,50 @@ struct UserCellView: View {
             
             VStack {
                 if isShowingLocation {
-                    Text("\(user.location.street.number) \(user.location.street.name), \(user.location.city) \(user.location.state), \(user.location.postcode)")
+                    Text("\(user.location.street?.number ?? 0) \(user.location.street?.name ?? "N/A"), \(user.location.city ?? "N/A"), \(user.location.postcode ?? "N/A")")
                 }
                 
                 if isShowingPhone {
-                    Text(user.phone)
+                    Text(user.phone ?? "N/A")
                 }
                 
                 if isShowingCell {
-                    Text(user.cell)
+                    Text(user.cell ?? "N/A")
                 }
                 
                 if isShowingEmail {
-                    Text(user.email)
+                    Text(user.email ?? "N/A")
                 }
                 
                 if isShowingLogin {
                     Text("Login:")
                     VStack {
-                        Text("Username: \(user.login.username)")
-                        Text("Password: \(user.login.password)")
+                        Text("Username: \(user.login.username ?? "N/A")")
+                        Text("Password: \(user.login.password ?? "N/A")")
                     }
                 }
                 
                 if isShowingRegistered {
                     Text("Registered:")
                     VStack {
-                        Text("Date: \(user.registered.date)")
-                        Text("Age: \(user.registered.age)")
+                        Text("Date: \(user.registered.date ?? "N/A")")
+                        Text("Age: \(user.registered.age ?? 00)")
                     }
                 }
                 
                 if isShowingId {
                     Text("ID:")
                     VStack {
-                        Text("Name: \(user.id.name)")
-                        Text("Value: \(user.id.value)")
+                        Text("Name: \(user.id.name ?? "N/A")")
+                        Text("Value: \(user.id.value ?? "N/A")")
                     }
                 }
             }
         }
+        .padding()
+        .background(.gray)
+        .clipShape(RoundedRectangle(cornerRadius: 20.0))
+        .shadow(radius: 5)
     }
 }
 

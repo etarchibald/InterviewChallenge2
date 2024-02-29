@@ -8,201 +8,109 @@
 import Foundation
 
 struct Results: Codable {
-    var users: [User]
-    var info: Info
-    
-    enum CodingKeys: String, CodingKey {
-        case users = "results"
-        case info = "info"
-    }
+    var results: [User]
 }
 
-struct User: Codable, Hashable {
-    var gender: String
-    var name: Username
+struct User: Codable, Identifiable, Hashable {
+    var gender: String?
+    var name: Name
     var location: Location
-    var email: String
+    var email: String?
     var login: Login
-    var dob: DOB
-    var registered: Registered
-    var phone: String
-    var cell: String
+    var dob: DateAge
+    var registered: Register
+    var phone: String?
+    var cell: String?
     var id: ID
     var picture: Picture
-    var nat: String
-    
-    enum CodingKeys: CodingKey {
-        case gender
-        case name
-        case location
-        case email
-        case login
-        case dob
-        case registered
-        case phone
-        case cell
-        case id
-        case picture
-        case nat
-    }
+    var nat: String?
     
     static func == (lhs: User, rhs: User) -> Bool {
-        lhs.id.value > rhs.id.value
+        lhs.nat ?? "" > rhs.nat ?? ""
     }
-    
+        
     func hash(into hasher: inout Hasher) {
         hasher.combine(nat)
     }
 }
 
-struct Username: Codable {
-    var title: String
-    var first: String
-    var last: String
-    
-    enum CodingKeys: CodingKey {
-        case title
-        case first
-        case last
-    }
+struct Name: Codable {
+    var title: String?
+    var first: String?
+    var last: String?
 }
 
 struct Location: Codable {
-    var street: Street
-    var city: String
-    var state: String
-    var postcode: String
-    var coordinates: Coordinates
-    var timezone: Timezone
+    var street: Street?
+    var city: String?
+    var country: String?
+    var postcode: String?
+    var coordinates: Coordinate?
+    var timezone: TimeyZone?
     
-    enum CodingKeys: CodingKey {
-        case street
-        case city
-        case state
-        case postcode
-        case coordinates
-        case timezone
-    }
+  enum CodingKeys: CodingKey {
+      case street
+      case city
+      case country
+      case postcode
+      case coordinates
+      case timezone
+  }
     
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.street = try container.decode(Street.self, forKey: .street)
-        self.city = try container.decode(String.self, forKey: .city)
-        self.state = try container.decode(String.self, forKey: .state)
-        self.coordinates = try container.decode(Coordinates.self, forKey: .coordinates)
-        self.timezone = try container.decode(Timezone.self, forKey: .timezone)
-        let postCodeInt = try? container.decode(Int.self, forKey: .postcode)
-        let postCodeString = try? container.decode(String.self, forKey: .postcode)
-        if let postCodeInt {
-            self.postcode = String(describing: postCodeInt)
-        } else {
-            self.postcode = postCodeString ?? ""
-        }
-    }
+  init(from decoder: Decoder) throws {
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+      self.street = try container.decodeIfPresent(Street.self, forKey: .street)
+      self.city = try container.decodeIfPresent(String.self, forKey: .city)
+      self.country = try container.decodeIfPresent(String.self, forKey: .country)
+      self.coordinates = try container.decodeIfPresent(Coordinate.self, forKey: .coordinates)
+      self.timezone = try container.decodeIfPresent(TimeyZone.self, forKey: .timezone)
+      let postcodeString = try? container.decodeIfPresent(String.self, forKey: .postcode)
+      let postcodeInt = try? container.decodeIfPresent(Int.self, forKey: .postcode)
+      if postcodeString != nil {
+          self.postcode = postcodeString
+      } else {
+          self.postcode = String(describing: postcodeInt)
+      }
+  }
 }
 
 struct Street: Codable {
-    var number: Int
-    var name: String
-    
-    enum CodingKeys: CodingKey {
-        case number
-        case name
-    }
+    var number: Int?
+    var name: String?
 }
 
-struct Coordinates: Codable {
-    var latitude: String
-    var longitude: String
-    
-    enum CodingKeys: CodingKey {
-        case latitude
-        case longitude
-    }
+struct Coordinate: Codable {
+    var latitude: String?
+    var longitude: String?
 }
 
-struct Timezone: Codable {
-    var offset: String
-    var description: String
-    
-    enum CodingKeys: CodingKey {
-        case offset
-        case description
-    }
+struct TimeyZone: Codable {
+    var offset: String?
+    var description: String?
 }
 
 struct Login: Codable {
-    var uuid: UUID
-    var username: String
-    var password: String
-    var salt: String
-    var md5: String
-    var sha1: String
-    var sha256: String
-    
-    enum CodingKeys: CodingKey {
-        case uuid
-        case username
-        case password
-        case salt
-        case md5
-        case sha1
-        case sha256
-    }
+    var uuid: String?
+    var username: String?
+    var password: String?
 }
 
-struct DOB: Codable {
-    var date: String
-    var age: Int
-    
-    enum CodingKeys: CodingKey {
-        case date
-        case age
-    }
+struct DateAge: Codable {
+    var date: String?
+    var age: Int?
 }
 
-struct Registered: Codable {
-    var date: String
-    var age: Int
-    
-    enum CodingKeys: CodingKey {
-        case date
-        case age
-    }
+struct Register: Codable {
+    var date: String?
+    var age: Int?
 }
-
-struct ID: Codable {
-    var name: String
-    var value: String
-    
-    enum CodingKeys: CodingKey {
-        case name
-        case value
-    }
+struct ID: Codable, Hashable {
+    var name: String?
+    var value: String?
 }
 
 struct Picture: Codable {
-    var large: String
-    var medium: String
-    var thumbnail: String
-    
-    enum CodingKeys: CodingKey {
-        case large
-        case medium
-        case thumbnail
-    }
-}
-
-struct Info: Codable {
-    var seed: String
-    var results: Int
-    var page: Int
-    var version: String
-    
-    enum CodingKeys: CodingKey {
-        case seed
-        case results
-        case page
-        case version
-    }
+    var large: String?
+    var medium: String?
+    var thumbnail: String?
 }

@@ -55,21 +55,15 @@ struct UserDetialsView: View {
         
         Button {
            dismiss()
-            fetchUsers()
+            userViewModel.fetchUsers(gender: gender.rawValue, amount: amount)
         } label: {
             Text("Get Users")
         }
         
         Spacer()
     }
-    
-    func fetchUsers() {
-        Task {
-            await userViewModel.fetchUsers(gender: gender.rawValue, amount: amount)
-        }
-    }
 }
 
 #Preview {
-    UserDetialsView(gender: .constant(Gender(rawValue: "male") ?? Gender.female), amount: .constant(1), isShowingGender: .constant(false), isShowingLocation: .constant(false), isShowingEmail: .constant(false), isShowingLogin: .constant(false), isShowingRegistered: .constant(false), isShowingDob: .constant(false), isShowingPhone: .constant(false), isShowingCell: .constant(false), isShowingId: .constant(false), isShowingNat: .constant(false))
+    UserDetialsView(gender: .constant(Gender(rawValue: "male") ?? Gender.female), amount: .constant(5), isShowingGender: .constant(false), isShowingLocation: .constant(false), isShowingEmail: .constant(false), isShowingLogin: .constant(false), isShowingRegistered: .constant(false), isShowingDob: .constant(false), isShowingPhone: .constant(false), isShowingCell: .constant(false), isShowingId: .constant(false), isShowingNat: .constant(false))
 }
