@@ -17,25 +17,23 @@ enum Gender: String, Equatable, CaseIterable {
 struct ContentView: View {
     @StateObject var userViewModel = UserViewModel()
     @State private var gender = Gender.male
-    @State private var amount = 5
+    @State private var amount = 3
     @State private var isShowingGender = true
-    @State private var isShowingLocation = false
+    @State private var isShowingLocation = true
     @State private var isShowingEmail = true
-    @State private var isShowingLogin = false
-    @State private var isShowingRegistered = false
-    @State private var isShowingDob = false
+    @State private var isShowingLogin = true
+    @State private var isShowingRegistered = true
+    @State private var isShowingDob = true
     @State private var isShowingPhone = true
-    @State private var isShowingCell = false
-    @State private var isShowingId = false
+    @State private var isShowingCell = true
+    @State private var isShowingId = true
     @State private var isShowingNat = true
     
     var body: some View {
         NavigationStack {
             VStack {
                 ScrollView {
-                    ForEach(userViewModel.users, id: \.self) { user in
-                        UserCellView(user: user, isShowingGender: isShowingGender, isShowingLocation: isShowingLocation, isShowingEmail: isShowingEmail, isShowingLogin: isShowingLogin, isShowingRegistered: isShowingRegistered, isShowingDob: isShowingDob, isShowingPhone: isShowingPhone, isShowingCell: isShowingCell, isShowingId: isShowingId, isShowingNat: isShowingNat)
-                    }
+                    UserCellView(user: userViewModel.users, isShowingGender: isShowingGender, isShowingLocation: isShowingLocation, isShowingEmail: isShowingEmail, isShowingLogin: isShowingLogin, isShowingRegistered: isShowingRegistered, isShowingDob: isShowingDob, isShowingPhone: isShowingPhone, isShowingCell: isShowingCell, isShowingId: isShowingId, isShowingNat: isShowingNat)
                 }
                 
                 NavigationLink {
@@ -44,10 +42,10 @@ struct ContentView: View {
                     Text("Grab Users!")
                 }
             }
+            .onAppear(perform: {
+                userViewModel.fetchUsers(gender: gender.rawValue, amount: amount)
+            })
         }
-        .onAppear(perform: {
-            userViewModel.fetchUsers(gender: gender.rawValue, amount: amount)
-        })
     }
 }
 

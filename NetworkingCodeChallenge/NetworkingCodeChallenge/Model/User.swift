@@ -11,7 +11,7 @@ struct Results: Codable {
     var results: [User]
 }
 
-struct User: Codable, Identifiable, Hashable {
+struct User: Codable {
     var gender: String?
     var name: Name
     var location: Location
@@ -24,14 +24,6 @@ struct User: Codable, Identifiable, Hashable {
     var id: ID
     var picture: Picture
     var nat: String?
-    
-    static func == (lhs: User, rhs: User) -> Bool {
-        lhs.nat ?? "" > rhs.nat ?? ""
-    }
-        
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(nat)
-    }
 }
 
 struct Name: Codable {
@@ -90,7 +82,7 @@ struct TimeyZone: Codable {
 }
 
 struct Login: Codable {
-    var uuid: String?
+    var uuid: String
     var username: String?
     var password: String?
 }
