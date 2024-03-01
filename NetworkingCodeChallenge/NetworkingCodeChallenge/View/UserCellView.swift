@@ -25,62 +25,71 @@ struct UserCellView: View {
         
         ForEach(user, id: \.id) { user in
             VStack {
-                HStack {
-                    AsyncImage(url: URL(string: user.picture.thumbnail ?? "image")) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                        case .success(let image):
-                            image.resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(maxWidth: 100, maxHeight: 100)
-                                .clipShape(Circle())
-                        case .failure:
-                            Image(systemName: "photo")
-                        @unknown default:
-                            EmptyView()
-                        }
-                    }
-                    VStack {
-                        Text("\(user.name.first ?? "") \(user.name.last ?? "")")
-                            .font(.largeTitle)
-                        
-                        HStack {
-                            if isShowingGender {
-                                Text(user.gender ?? "Don't know")
-                            }
-                            
-                            if isShowingDob {
-                                Text("age: \(user.dob.age ?? 0)")
-                            }
-                            
-                            if isShowingNat {
-                                Text(user.nat ?? "Unknown")
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(.teal)
+                    
+                    HStack {
+                        AsyncImage(url: URL(string: user.picture.thumbnail ?? "image")) { phase in
+                            switch phase {
+                            case .empty:
+                                ProgressView()
+                            case .success(let image):
+                                image.resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(maxWidth: 100, maxHeight: 100)
+                                    .clipShape(Circle())
+                            case .failure:
+                                Image(systemName: "photo")
+                            @unknown default:
+                                EmptyView()
                             }
                         }
+                        .padding(/*@START_MENU_TOKEN@*/EdgeInsets()/*@END_MENU_TOKEN@*/)
+                        VStack {
+                            Text("\(user.name.first ?? "") \(user.name.last ?? "")")
+                                .font(.largeTitle)
+                            
+                            HStack {
+                                if isShowingGender {
+                                    Text(user.gender ?? "Don't know")
+                                }
+                                
+                                if isShowingDob {
+                                    Text("age: \(user.dob.age ?? 0)")
+                                }
+                                
+                                if isShowingNat {
+                                    Text(user.nat ?? "Unknown")
+                                }
+                            }
+                        }
+                        .padding()
                     }
                 }
                 
                 VStack {
                     if isShowingLocation {
-                        Text("\(user.location.street?.number ?? 0) \(user.location.street?.name ?? "N/A"), \(user.location.city ?? "N/A"), \(user.location.postcode ?? "N/A")")
+                        Text("\(user.location.street?.number ?? 0) \(user.location.street?.name ?? "N/A"), \(user.location.city ?? "N/A")")
                     }
                     
                     if isShowingPhone {
-                        Text(user.phone ?? "N/A")
+                        Text("Phone: \(user.phone ?? "N/A")")
                     }
                     
                     if isShowingCell {
-                        Text(user.cell ?? "N/A")
+                        Text("Cell: \(user.cell ?? "N/A")")
                     }
                     
                     if isShowingEmail {
-                        Text(user.email ?? "N/A")
+                        Text("Email: \(user.email ?? "N/A")")
                     }
                     
                     if isShowingLogin {
                         Text("Login:")
-                        VStack {
+                            .font(.headline)
+                            .fontWeight(.bold)
+                        HStack {
                             Text("Username: \(user.login.username ?? "N/A")")
                             Text("Password: \(user.login.password ?? "N/A")")
                         }
@@ -88,7 +97,9 @@ struct UserCellView: View {
                     
                     if isShowingRegistered {
                         Text("Registered:")
-                        VStack {
+                            .font(.headline)
+                            .fontWeight(.bold)
+                        HStack {
                             Text("Date: \(user.registered.date ?? "N/A")")
                             Text("Age: \(user.registered.age ?? 00)")
                         }
@@ -96,7 +107,9 @@ struct UserCellView: View {
                     
                     if isShowingId {
                         Text("ID:")
-                        VStack {
+                            .font(.headline)
+                            .fontWeight(.bold)
+                        HStack {
                             Text("Name: \(user.id.name ?? "N/A")")
                             Text("Value: \(user.id.value ?? "N/A")")
                         }
@@ -104,9 +117,8 @@ struct UserCellView: View {
                 }
             }
             .padding()
-            .background(.gray)
             .clipShape(RoundedRectangle(cornerRadius: 20.0))
-            .shadow(radius: 5)
+            .shadow(radius: 10)
         }
     }
 }
